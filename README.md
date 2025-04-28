@@ -1,184 +1,262 @@
 
 Operating Systems IT 2244
-Day 03 Practical
-21/03/2025
+Day 04 Practical
+24/03/2025
 
-1.Practical No:07
+1.Practical No:
 
 2.Implementation:
-
-	1)Create a tab separeted file 
-	-----------------------------
-	example:
-   	vi ghi.tsv
+	1)Display the calander
+	command: cal
 	output:
-	{ Desktop }  » vi ghi.tsv                                                                                                          
-	{ Desktop }  » more ghi.tsv                                                                                                         
-	aa      45      34      56      67
-	bb      34      45      12      78
-	cc      78      52      87      99
-	dd      56      78      90      100
-	ee      34      12      13      14
-	ff      78      76      77      97
-	gg      31      32      33      34
-	hh      22      36      78      90
-	ii      78      77      88      90
-	jj      45      78      100     34
+	 cal                                                                                                                                                        ~
+    	 April 2025
+	 Su Mo Tu We Th Fr Sa
+       	 1  2  3  4  5
+         6  7  8  9 10 11 12
+	 13 14 15 16 17 18 19
+	 20 21 22 23 24 25 26
+	 27 28 29 30
 
-	
-	2)Extact first column from a tab seperated file
-	-----------------------------------------------
-	example:
-	cut -d $'\t' -f1 ghi.tsv
-	output:
-	{ Desktop }  » cut -d $'\t' -f1 ghi.tsv                                                                                          
-	aa
-	bb
-	cc
-	dd
-	ee
-	ff
-	gg
-	hh
-	ii
-	jj
+	2)Command to display the day of the month as a two-digit number
+	---------------------------------------------------------------
+	command: date +%d
+	output: 
+	{ Desktop }  » date +%d                                         
+	24
 
-	Explain the syntax:
-	cut 	 -> A command used to extract sections of a file.
-	-d $'\t' -> Sets the delimiter to a tab (\t).
-	$'\t' 	 ->is Bash syntax for representing a tab character.
-	-f1      -> Selects the first field (column).
-	ghi.tsv  -> The input file (a TSV file).
-	
+	explanation of command:
+	date -> Shows the date and time.
+	+%d -> Displays only the day (01-31)
 
-	3)Extract the data using awk command
-	------------------------------------
-	example:
-	awk '{print}' ghi.tsv
-	output:
-	{ Desktop }  » awk '{print}' ghi.tsv                                                                                                
-	aa      45      34      56      67
-	bb      34      45      12      78
-	cc      78      52      87      99
-	dd      56      78      90      100
-	ee      34      12      13      14
-	ff      78      76      77      97
-	gg      31      32      33      34
-	hh      22      36      78      90
-	ii      78      77      88      90
-	jj      45      78      100     34
+	3)Command to display the last two digits of the current year
+	------------------------------------------------------------
+	command: date +%y
+	output: 
+	{ Desktop }  » date +%y
+	25
 
-	Explain the syntax:
-	awk 	  -> A text-processing tool that reads files line by line.
-	'{print}' -> The default action in awk, which prints each line as it is.
-	ghi.tsv   -> The input file.
+	explanation of command:
+	date → Shows the date and time.
+	+%y → Displays the last two digits of the year (00-99)
 
-	4)Extract the third column from tsv file using awk command
-	----------------------------------------------------------
-	example:
-	awk '{print $3}' ghi.tsv
-	output:
-	{ Desktop }  » awk '{print $3}' ghi.tsv                                                                                         
-	34
-	45
-	52
-	78
-	12
-	76
-	32
-	36
-	77
-	78
-	
-	Explain the syntax:
-
-	awk -> A powerful text-processing tool that processes files line by line.
-
-	'{print $3}' ->The action performed by awk:
-
-		print -> Tells awk to print something.
-
-		$3 -> Refers to the third column (field) of each line.
-
-	ghi.tsv -> The input file (in this case, a tab-separated values file).
-
-	5)To print the number of columns in in the first row (Using Default Field Separator (Whitespace))
-	----------------------------------------------------
-	example:
-	awk '{print NF;exit}' ghi.tsv
-	output:
-	{ Desktop }  » awk '{print NF;exit}' ghi.tsv                                                                                     
-	5
-	
-	Explain the syntax:
-	awk-> A tool to process text files line by line.
-	'{print NF; exit}'->
-	print NF -> Prints the number of columns (fields) in the current line.
-	exit -> Stops after the first line is processed.
-	ghi.tsv -> The input file being processed.
-	
-	6)To prints the number of columns in the first row of ghi.tsv and then stops.(Using Tab as Field Separator (For TSV Files)
-	
-	example:
-	awk -F '\t' '{print NF; exit}' ghi.tsv
-	output:
-	{ Desktop }  » awk -F '\t' '{print NF; exit}' ghi.tsv                                                                            
-	6
-
-	Explain the syntax::
-	-F '\t': Specifies the field separator (in this case, tab \t).
-	{print NF; exit}:
-	NF: Represents the number of fields (columns) in the current line.
-	exit: Stops further processing after the first line is read.
-
-	7)Get the Specific row from the input
-	-------------------------------------
-	
-	get the 8th row
-
-	example:
-	head -n8 ghi.tsv | tail -n1
-	output:
-	{ Desktop }  » head -n8 ghi.tsv | tail -n1                                                                                      
-	hh      22      36      78      90
-
-	Explain the syntax:
-	head -n8 ghi.tsv: Shows the first 8 lines of ghi.tsv.
-	| (pipe): Passes the first 8 lines to the next command.
-	tail -n1: From those 8 lines, it shows the 8th line.
-
-	8)Count the number of lines with file name
+	4)Command to display the full weekday name
 	------------------------------------------
+	command: date +%A
+	output: 
+	{ Desktop }  » date +%A
+	Monday
+
+	explanation of command:
+	date → Shows the date and time.
+	+%A → Displays the full name of the weekday (eg: Sunday, Monday)
+
+	5)Command to display the abbreviated weekday name
+	-------------------------------------------------
+	ommand: date +%a
+	output: 
+	{ Desktop }  » date +%a
+	Mon
+
+	explanation of command:
+	date → Shows the date and time.
+	+%a → Displays the abbreviated weekday name (e.g., Sun, Mon)
+
+	6)Command to display the full month name
+	----------------------------------------
+	command: date +%B
+	output: 
+	{ Desktop }  » date +%B
+	March
+
+	explanation of command:
+	date → Shows the date and time.
+	+%B → Displays the full month name (e.g., January, February)
+
+	7)Command to display the abbreviated month name
+	-----------------------------------------------
+	command: date +%b
+	output: 
+	{ Desktop }  » date +%b
+	Mar
+
+	explanation of command:
+	date → Shows the date and time.
+	+%b → Displays the abbreviated month name (e.g., Jan, Feb)
+
+	8)Command to display the month as a two-digit number
+	----------------------------------------------------
+	command: date +%m
+	output: 
+	{ Desktop }  » date +%m
+	03
+
+	explanation of command:
+	date → Shows the date and time.
+	+%m → Displays the month as a two-digit number (01-12)
+
+	9)Command to display the minute as a two-digit number
+	-----------------------------------------------------
+	command: date +%M
+	output: 
+	{ Desktop }  » date +%M
+	18
+
+	explanation of command:
+	date → Displays the system date and time.
+	+%M → Extracts and displays the current minutes (00-59)
+
+	10)Command to display current hour in 24-hour format
+	---------------------------------------------------
+	command: date +%H
+	output: 
+	{ Desktop }  » date +%H
+	22
+
+	explanation of command:
+	date → Displays the system date and time.
+	+%H → Extracts and displays the current hour in 24-hour format (00-23)
 	
-	exapmle:
-	wc -l ghi.tsv
+	11)Getting user input in Linux
+	------------------------------
+
+
+	Example 01=>
+
+	Open the terminal and type vi prgrm1.sh to create a new file using the vi command.
+	Press i to enter INSERT mode and type the script, which prompts the user for their name and three numbers, then calculates the sum and average.
+	After entering the code, press Esc, type :wq, and press Enter to save and exit the file.
+	To verify whether the file is created, use the command ls -l prgrm1.sh, which will list the file along with its permissions.
+	Grant full execution permissions to the file by running chmod 777 prgrm1.sh, allowing it to be executed.
+	Check if the permissions are updated by using ls -l prgrm1.sh again, where it should display rwxrwxrwx.
+	Execute the script using ./prgrm1.sh, which will:
+	Prompt the user to enter their name and three numbers.
+	Display a greeting message.
+	Compute the sum and average of the numbers.
+	Display the results.
+
+	command:
+	echo "Who are you?"
+	read name
+	echo "Enter Number 1"
+	read x
+	echo "Enter Number 2"
+	read y
+	echo "Enter Number 3"
+	read z
+	sum=$(($x+$y+$z))
+	avg=$(($sum/3))
+
+	echo "Hi" $name
+	echo "Summation " $sum
+	echo "Average " $avg
+
 	output:
-	{ Desktop }  » wc -l ghi.tsv                                                                                                      
-	11 ghi.tsv
+	{ Desktop }  »                                                
+	\ 	echo "Who are you?"
+	\       read name
+	\       echo "Enter Number 1"
+	\       read x
+	\       echo "Enter Number 2"
+	\       read y
+	\       echo "Enter Number 3"
+	\       read z
+	\       sum=$(($x+$y+$z))
+	\       avg=$(($sum/3))
+	\
+	\       echo "Hi" $name
+	\       echo "Summation " $sum
+	\       echo "Average " $avg
+	\ 
+	Who are you?
+	Kamal
+	Enter Number 1
+	3
+	Enter Number 2
+	4
+	Enter Number 3
+	5
+	Hi Kamal
+	Summation  12
+	Average  4
 
-	Explain the syntax:
-	wc: Stands for word count, but it can also count lines, words, and characters.
-	-l: Option to count the lines in the file.
-	ghi.tsv: The input file you want to analyze.
+	explanation of the code:
+	-echo prints "Who are you?" to the screen.
+	-read name takes user input and stores it in the variable name
+	-echo asks the user to enter three numbers.
+	-read x, read y, and read z store the entered numbers into variables x, y, and z
+	-The sum of x, y, and z is calculated using $(()) (arithmetic expansion).
+	-The result is stored in the variable sum.
+	-The sum is divided by 3 to get the average.
+	-The result is stored in the variable avg.
+	-Greets the user with "Hi" followed by their name.
+	-Displays the calculated sum and average.
 
-	9)To get the row which have specific data
-	-----------------------------------------
-	example:
-	head -n10 ghi.tsv | grep 'cc'
+	Example 02=>
+
+	Open the terminal and type vi prgrm2.sh to create a new file using the vi command.
+	Press i to enter INSERT mode and type the script, which prompts the user to enter two numbers and then performs addition, subtraction, multiplication, and division.
+	After entering the code, press Esc, type :wq, and press Enter to save and exit the file.
+	To verify whether the file is created, use the command ls -l prgrm2.sh, which will list the file along with its permissions.
+	Grant full execution permissions to the file by running chmod 777 prgrm2.sh, allowing it to be executed.
+	Check if the permissions are updated by using ls -l prgrm2.sh again, where it should display rwxrwxrwx.
+	Execute the script using ./prgrm2.sh, which will:
+	Prompt the user to enter two numbers.
+	Compute the sum, difference, product, and quotient of the numbers.
+	Display the results.
+
+	command:
+	echo "Enter number 1:"
+ 	read p
+	 echo "Enter number 2:"
+ 	read q
+ 	sum=$(($p+$q))
+ 	sub=$(($p-$q))
+ 	mul=$(($p*$q))
+ 	div=$(($p/$q))
+
+	echo "Addition " $sum
+	echo "subtraction " $sub
+	echo "multiplication " $mul
+	echo "division " $div
+
 	output:
-	{ Desktop }  » head -n10 ghi.tsv | grep 'cc'                                                                                      
-	cc      78      52      87      99
+	{ Desktop }  »                                            
+	\ echo "Enter number 1:"
+	\  read x
+	\  echo "Enter number 2:"
+	\  read y
+	\  sum=$(($p+$q))
+ 	\  sub=$(($p-$q))
+ 	\  mul=$(($p*$q))
+ 	\  div=$(($p/$q))
 
-	Explain the syntax:
-	head -n 10 ghi.tsv: Shows the first 10 lines of ghi.tsv.
-	| (pipe): Passes those 10 lines to the next command.
-	grep 'cc': Filters and shows only the lines that contain 'cc'.
+	\
+	\ echo "Addition " $sum
+	\ echo "subtraction " $sub
+	\ echo "multiplication " $mul
+	\ echo "division " $div
+	\ 
+	Enter number 1:
+	20
+	Enter number 2:
+	3
+	Addition  23
+	subtraction  17
+	multiplication  60
+	division  6
 
-	
-	
+	Explanation of code:
+	-echo displays a message asking the user to enter numbers.
+	-read x and read y take user input and store the values in variables x and y
+	-Addition (sum): Adds p and q → sum = p + q
+	-Subtraction (sub): Subtracts q from p → sub = p - q
+	-Multiplication (mul): Multiplies p and q → mul = p * q
+	-Division (div): Divides p by q → div = p / q (integer division)
 
 
 
 
 
-	
+
+

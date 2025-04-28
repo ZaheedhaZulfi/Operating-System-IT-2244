@@ -1,226 +1,491 @@
 
 Operating Systems IT 2244
-Day 01 Practical
-Windows Commands PRACTICAL
+Day 02 Practical
 
-1.Practical No: 01
+Windows Commands
 
-2.Problem Specification: Writing a Batch Script to Create Folder Structures
+1.Practical No: 05
 
-3.Implementation: 
+2.Implementation:
 
-Steps to Create the Batch Script:
-1)Open a Text Editor:
-2)Write the Script:
-In the text editor, type the following script. This script uses basic batch commands like mkdir to create folders and cd to navigate between them
+	1)The dir *.txt command lists all files in the current folder that have any name but end with .txt
 
-mkdir Criteria_1
-cd Criteria_1
-mkdir Standard_1
-mkdir Standard_2
-mkdir Standard_3
+		command:
+		dir *.txt
+		
+		Example: 
+		C:\Users\skyline\Desktop>dir *.txt
 
-cd..
-mkdir Criteria_2
-cd Criteria_2
-mkdir Standard_1
-mkdir Standard_2
-mkdir Standard_3
-mkdir Standard_4
-mkdir Standard_5
-cd..
-mkdir Criteria_3
-cd Criteria_3
-mkdir Standard_1
-mkdir Standard_2
-mkdir Standard_3
+		Output:
+		
+		Directory of C:\Users\skyline\Desktop
 
-cd..
-mkdir Criteria_4
-cd Criteria_4
-mkdir Standard_1
-mkdir Standard_2
-mkdir Standard_3
-mkdir Standard_4
-mkdir Standard_5
-mkdir Standard_6
-cd..
-mkdir Criteria_5
-mkdir Criteria_6
-mkdir Criteria_7
+		03/23/2025  04:20 PM                 0 abc.txt
+               	1 File(s)              0 bytes
+               	0 Dir(s)  19,236,536,320 bytes free
 
-3)How to run the Batch Script:
 
-1.Save the Script:
-After writing the script, save it with a .bat extension (e.g., createFolders.bat)
-2.Run the Script:
-Find the .bat file in File Explorer.
-Double-click it to execute.
-The script will automatically create the folder structure in the same location as the .bat file.
+	2)create a text file in desktop eg: abc.txt make them as hidden and read only
+		command:
+		ATTRIB [+attribute | -attribute]
+		
+		+attribute / -attribute:
 
-4.Explanation of Commands Used:
+		Use + to set an attribute (e.g., +H for hidden, +R for read-only).
 
-mkdir: Creates new folders.
+		Use - to remove an attribute.
 
-cd: Navigates between folders
+		Example 1:
+		C:\Users\skyline\Desktop>ATTRIB +H abc.txt
+		Output 1:
+		This command hides the abc.txt file on the Desktop. 
+		It won’t be visible in File Explorer unless you turn on the option to show hidden files.
+		
+		Example 2:
+		C:\Users\skyline\Desktop>ATTRIB -H abc.txt
+		Output 2:
+		This command removes the hidden attribute from abc.txt, making it visible in File Explorer again.
 
-cd.. – Goes up one folder level
+		Example 3:
+		C:\Users\skyline\Desktop>ATTRIB +R abc.txt
+		Output 3:
+		This command makes abc.txt a read-only file.
+		You will not be able to edit or delete it unless the read-only attribute is removed.
 
-5.Conclusion:
-In this practical, we created a batch script to automatically set up a folder structure. By using commands like mkdir, cd, and cd.. ,
-to organize the directories.
+		Example 4:
+		C:\Users\skyline\Desktop>ATTRIB -R abc.txt
+		Output 4:
+		This command removes the read-only attribute from abc.txt, allowing it to be edited or deleted as needed.
+
+
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 
-1.Practical No: 02
+Linux commands
 
-2.Problem Specification: Writing a Batch Script to Calculate Age
+1.Practical No: 06
 
-3.Implementation: 
+2.Implementation: 
 
-Steps to Create the Batch Script:
+	1)Create a file using touch command
+	-----------------------------------
+	syntax:
+	touch filename
 
-1)Open a Text Editor:
-2)Write the Script:
-In the text editor, type the following script. This script asks for the user's birth year,
-then calculates and displays their age based on the current year.
+	command:
+	touch xyz.txt
+	
+	Example:
+	{ Desktop }  » touch xyz.txt      
+	Output:
+	A text file named xyz created in the desktop
 
-@echo off
-set /p birth_year=Enter your birth year:
-set /a age=%date:~10,4% - %birth_year%
-echo Your age is: %age%
-pause
+	2)Input data to the created file using vi or vim
+   	------------------------------------------------
+	syntax	
+	vi filename.txt
+	or
+	vim filename.txt
+	If the file doesn’t exist, this will create it.
 
-3)How to Run the Batch Script:
-Save the Script:
-After writing the script, save it with a .bat extension (e.g., calculateAge.bat).
-Run the Script:
-Find the .bat file in File Explorer.
-Double-click it to execute.
-The script will ask you to enter your birth year and then show your calculated age.
+	Enter Insert Mode (to type text):
 
-4.Explanation of Commands Used:
+	Press the key i (for Insert mode).
 
-set /p: Asks the user to input their birth year.
+	Now we can start typing our content.
+	
+	Press Esc to exit Insert mode.
+	
+	Press ctrl + c, shift :
 
-%date:~10,4%: Retrieves the current year from the system date.
-set /a: Performs arithmetic (calculates the age).
+	To Save and Exit:
 
-echo: Displays the result.
+	Type wq and press Enter to save and exit.
 
-pause: Pauses the script so you can see the result before closing.
+	w = Write (save)
 
-5.Conclusion:
+	q = Quit
 
-In this practical, we created a batch script to calculate a user's age based on their birth year and the current year.
-By using basic commands like set, echo, and pause, we were able to interact with the user and perform a simple calculation.
+	
+	3)To view the contents of a text file using more or less command
+	----------------------------------------------------------------
+	syntax:
+	more filename.txt
+	
+	example:
+	{ Desktop }  » more xyz.txt  
+	output:
+	{ Desktop }  » more xyz.txt                                                                                                      
+	aa      90      140     23      12
+	bb      45      23      34      56
+	cc      56      89      67      90
+	
+	syntax:
+	less filename.txt
+	
+	example:
+	{ Desktop }  » less xyz.txt
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+	output:
+	aa      90      140     23      12
+	bb      45      23      34      56
+	cc      56      89      67      90
 
-1.Practical No: 03 
+	We use the more command to look at a file one page at a time, but we can only move forward. 
+	The less command lets us scroll both ways and search in the file. more is simple, 
+	but less is better for bigger files or when we need to search
 
-2.Problem Specification: Writing a Batch Script to Display System Information
+	4)List all files and directories using ls command 
+	-------------------------------------------------
+	Syntax:
+	ls [option] [file/directory]
+	
+	commanly used options:
+	
+	-l = known as a long format that displays detailed information about files and directories.
+	-a = Represent all files Include hidden files and directories in the listing.
+	
+	example 01:
+	{ Desktop }  » ls -a     
+	output 01:
+	{ Desktop }  » ls -a                                                                                                              
+	.             babun                                          Excel.lnk                                  KMPlayer.lnk         Proteus 8 Professional.lnk
+	..            babun.lnk                                      GitHub Desktop.lnk                         MATLAB               Sameeha
+	.vs           babun.zip                                      IT2212 MIS                                 Matlab Compress      Telegram.lnk
+	.xyz.txt.un~  CodeBlocks.lnk                                 IT2223(p) DAA                              MinGW Installer.lnk  umma
+	1st year      Communication & Soft Skills                    IT2234(p) WSST                             Movies               xyz.txt
+	2.2           debug                                          IT2244 OS(p)                               new                  xyz.txt~
+	2nd Year      desktop.ini                                    IT2252 Social & Professional issues in IT  New folder           Zoom.lnk
+	abc.txt       Eclipse IDE for Java Developers - 2023-12.lnk  J                                          New folder (2)
 
-3.Implementation:
+	example 02:
+	{ Desktop }  » ls -l 
+	output 02:
+	{ Desktop }  » ls -l                                                                                                              
+	total 278880
+	drwxr-xr-x 1 skyline None         0 Sep  6  2024 1st year
+	drwxr-xr-x 1 skyline None         0 Mar 12 21:34 2.2
+	drwxr-xr-x 1 skyline None         0 Jan 31 20:37 2nd Year
+	-rw-r--r-- 1 skyline None         0 Mar 23 16:20 abc.txt
+	drwxr-xr-x 1 skyline None         0 Mar 23 01:53 babun
+	-rwxr-xr-x 1 skyline None      1030 Mar 23 01:56 babun.lnk
+	-rw-r--r-- 1 skyline None 285509431 Mar 23 01:43 babun.zip
+	-rwxr-xr-x 1 skyline None       949 Sep 18  2023 CodeBlocks.lnk
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:38 Communication & Soft Skills
+	drwxr-xr-x 1 skyline None         0 Sep 28  2023 debug
+	-rw-r--r-- 1 skyline None       282 Aug 22  2023 desktop.ini
+	-rwxr-xr-x 1 skyline None      1097 Feb 18  2024 Eclipse IDE for Java Developers - 2023-12.lnk
+	-rwxr-xr-x 1 skyline None      2413 Aug 21  2023 Excel.lnk
+	-rwxr-xr-x 1 skyline None      2379 Mar 11 21:35 GitHub Desktop.lnk
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:38 IT2212 MIS
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:37 IT2223(p) DAA
+	drwxr-xr-x 1 skyline None         0 Mar 22 01:36 IT2234(p) WSST
+	drwxr-xr-x 1 skyline None         0 Mar 23 03:09 IT2244 OS(p)
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:38 IT2252 Social & Professional issues in IT
+	drwxr-xr-x 1 skyline None         0 Dec  9 22:34 J
+	-rwxr-xr-x 1 skyline None       643 Aug 21  2023 KMPlayer.lnk
+	drwxr-xr-x 1 skyline None         0 Mar 18 12:33 MATLAB
+	drwxr-xr-x 1 skyline None         0 Mar 18 20:57 Matlab Compress
+	-rwxr-xr-x 1 skyline None       879 Oct  8  2023 MinGW Installer.lnk
+	drwxr-xr-x 1 skyline None         0 Feb 16  2024 Movies
+	drwxr-xr-x 1 skyline None         0 Mar 23 02:36 new
+	drwxr-xr-x 1 skyline None         0 Mar  7 22:25 New folder
+	drwxr-xr-x 1 skyline None         0 Mar 18 21:20 New folder (2)
+	-rwxr-xr-x 1 skyline None      1619 Jul 18  2024 Proteus 8 Professional.lnk
+	drwxr-xr-x 1 skyline None         0 Jan 25 20:34 Sameeha
+	-rwxr-xr-x 1 skyline None      1038 Aug 17  2024 Telegram.lnk
+	drwxr-xr-x 1 skyline None         0 Jun 18  2024 umma
+	-rw-r--r-- 1 skyline None        48 Mar 23 20:12 xyz.txt
+	-rw-r--r-- 1 skyline None        48 Mar 23 20:05 xyz.txt~
+	-rwxr-xr-x 1 skyline None      1937 Dec 10  2023 Zoom.lnk
 
-Steps to Create the Batch Script:
+	example 03:
+	{ Desktop }  » ls -ltr  
+	output:
+	{ Desktop }  » ls -ltr                                                                                                          
+	total 278880
+	-rwxr-xr-x 1 skyline None       643 Aug 21  2023 KMPlayer.lnk
+	-rwxr-xr-x 1 skyline None      2413 Aug 21  2023 Excel.lnk
+	-rw-r--r-- 1 skyline None       282 Aug 22  2023 desktop.ini
+	-rwxr-xr-x 1 skyline None       949 Sep 18  2023 CodeBlocks.lnk
+	drwxr-xr-x 1 skyline None         0 Sep 28  2023 debug
+	-rwxr-xr-x 1 skyline None       879 Oct  8  2023 MinGW Installer.lnk
+	-rwxr-xr-x 1 skyline None      1937 Dec 10  2023 Zoom.lnk
+	drwxr-xr-x 1 skyline None         0 Feb 16  2024 Movies
+	-rwxr-xr-x 1 skyline None      1097 Feb 18  2024 Eclipse IDE for Java Developers - 2023-12.lnk
+	drwxr-xr-x 1 skyline None         0 Jun 18  2024 umma
+	-rwxr-xr-x 1 skyline None      1619 Jul 18  2024 Proteus 8 Professional.lnk
+	-rwxr-xr-x 1 skyline None      1038 Aug 17  2024 Telegram.lnk
+	drwxr-xr-x 1 skyline None         0 Sep  6  2024 1st year
+	drwxr-xr-x 1 skyline None         0 Dec  9 22:34 J
+	drwxr-xr-x 1 skyline None         0 Jan 25 20:34 Sameeha
+	drwxr-xr-x 1 skyline None         0 Jan 31 20:37 2nd Year
+	drwxr-xr-x 1 skyline None         0 Mar  7 22:25 New folder
+	-rwxr-xr-x 1 skyline None      2379 Mar 11 21:35 GitHub Desktop.lnk
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:37 IT2223(p) DAA
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:38 IT2252 Social & Professional issues in IT
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:38 IT2212 MIS
+	drwxr-xr-x 1 skyline None         0 Mar 12 15:38 Communication & Soft Skills
+	drwxr-xr-x 1 skyline None         0 Mar 12 21:34 2.2
+	drwxr-xr-x 1 skyline None         0 Mar 18 12:33 MATLAB
+	drwxr-xr-x 1 skyline None         0 Mar 18 20:57 Matlab Compress
+	drwxr-xr-x 1 skyline None         0 Mar 18 21:20 New folder (2)
+	drwxr-xr-x 1 skyline None         0 Mar 22 01:36 IT2234(p) WSST
+	-rw-r--r-- 1 skyline None 285509431 Mar 23 01:43 babun.zip
+	drwxr-xr-x 1 skyline None         0 Mar 23 01:53 babun
+	-rwxr-xr-x 1 skyline None      1030 Mar 23 01:56 babun.lnk
+	drwxr-xr-x 1 skyline None         0 Mar 23 02:36 new
+	drwxr-xr-x 1 skyline None         0 Mar 23 03:09 IT2244 OS(p)
+	-rw-r--r-- 1 skyline None         0 Mar 23 16:20 abc.txt
+	-rw-r--r-- 1 skyline None        48 Mar 23 20:05 xyz.txt~
+	-rw-r--r-- 1 skyline None        48 Mar 23 20:12 xyz.txt
 
-1)Open a Text Editor:
-2)Write the Script:
-In the text editor, type the following script. This script will display the username, system version, current date, and time.
+	ls -ltr is used to list files based on their last modified time in reverse order
+	
+	This command does the following:
 
-@echo off
-echo Username : %username%
-echo Version : 
-ver
+	-l → Long listing format (detailed view).
 
-echo Date : %date%
+	-t → Sort by modification time (newest first).
 
-echo Time : 
-time
+	-r → Reverse the order (oldest first).
 
-pause
+	The most recently modified file will appear at the bottom, which is useful when dealing with long file lists.
 
-3)How to Run the Batch Script:
+	
+	5)Create .csv file 
+	------------------
+	Syntax: vi filename.csv
 
-Save the Script:
-After writing the script, save it with a .bat extension (e.g., systemInfo.bat).
-Run the Script:
-Find the .bat file in File Explorer.
-Double-click it to execute.
-The script will show your username, system version, current date, and time.
+	example:
+	{ Desktop }  » vi pqr.csv 
+	output:
+	A csv file named pqr is created in the desktop
 
-4.Explanation of Commands Used:
+	6)Search files using find command
+	---------------------------------
+	
+	Syntax: 
+	To Find a file by name:
+	find . -name "file.txt"
+	
+	example:
+	{ Desktop }  » find . -name "*.csv"                                                                                           
+	output:
+	{ Desktop }  » find . -name "*.csv"                                                                                               
+	./pqr.csv
 
-@echo off: Hides the command execution details for cleaner output.
+	Syntax:
+	To find all directories
+	find . -type d
+	
+	example:{ Desktop }  » find . -type d 
 
-echo: Displays information to the user.
+	7)To retrieve the number of lines in a file using wc command
+	-------------------------------------------
+	The wc -l command counts the number of lines in a file or input provided
 
-%username%: Displays the current user's username.
+	Syntax: wc -l filename.txt
 
-ver: Shows the system version.
+	example: 
+	{ Desktop }  » wc -l xyz.txt                                                                                                                                                               
+	output:
+	{ Desktop }  » wc -l xyz.txt                                                                                                     
+	4 xyz.txt
 
-%date%: Displays the current date.
+	7)To retrieve columns and rows from a file using cut command
+	------------------------------------------------------------
 
-time: Displays the current system time.
+	cut: The cut command is used to extract specific columns or fields from a file or text input.
 
-pause: Pauses the script so you can view the results before closing the window.
+	To retrieve the 3nd column of a CSV file
 
-5.Conclusion:
+	example:
+	cut -d ',' -f 3 pqr.csv
+	output:
+	{ Desktop }  » cut -d ',' -f 3 pqr.csv                                                                                            
+	96
+	32
+	87
 
-In this practical, we created a batch script that shows system information such as the username, version, date, and time.
-By using simple commands like echo, %username%, ver, and pause, we can easily display useful system details.
+	Explanation of the syntax:
+	cut: A command used to extract sections from each line of a file.
+	-d ',': Specifies the delimiter. In this case, it is a comma (,) because it's a CSV file.
+	-f 3: Specifies the field (column) number to extract. -f 3 means the third column.
+	pqr.csv: The input file from which the data is extracted.
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+	To retrieve the 1st and 3rd column of a CSV file
+	
+	example:
+	cut -d ',' -f1,3 pqr.csv
+	Output:
+	{ Desktop }  » cut -d ',' -f1,3 pqr.csv                                                                                        
+	25,96
+	14,32
+	45,87
 
-1.Practical No: 04
+	Explanation of the syntax:
+	cut: A command used to extract sections from each line of a file.
+	-d ',': Specifies the delimiter. In this case, it is a comma (,) because it's a CSV file.
+	-f1,3: Specifies the fields (columns) to extract. -f1,3 means it will extract the 1st and 3rd columns.
+	pqr.csv: The input file from which the data is extracted.
 
-2.Problem Specification: Change the text and background color of CMD 
+	8)Extract the first column of a csv file using awk command
+	----------------------------------------------------------
+	To retrieve the 1st column of a CSV file
 
-3.Implementation:
+	example:
+	awk -F ',' '{print $1}' pqr.csv
+	output:
+	{ Desktop }  » awk -F ',' '{print $1}' pqr.csv                                                                                    
+	25
+	14
+	45
 
-Syntax
+	Explanation of the syntax:
+	awk: A tool to process text line by line.
+	-F ',': Tells awk to use comma as the separator between columns.
+	'{print $1}': Prints the first column of each line.
+	pqr.csv: The input CSV file.
+	
+	9)Head and Tail commands
+	------------------------
+	Command to display first 5 lines of the pqr.csv file.
+ 
+	example:
+	head -n 5 pqr.csv
+	output:                                                                                            
+	{ Desktop }  »  head -n 5 pqr.csv                                                                                               
+	25,36,96,
+	14,22,32,
+	45,47,87,
+	67,54,21,
+	22,89,74,
 
-color xy
+	Explanation of the syntax:
+	head: A command to show the first part of a file.
+	-n 5: Specifies to display the first 5 lines of the file.
+	pqr.csv: The input file.
+	
+	This command displays the last 2 lines of the pqr.csv file.
 
-x - represents the color of the Terminal’s background
+	example:
+	tail -n 2 pqr.csv
+	output:
+	{ Desktop }  » tail -n 2 pqr.csv                                                                                                  
+	92,63,85,
+	45,78,89,
 
-y - represents the color of the font on the Command Prompt Terminal.
+	Explanation of the syntax:
+	tail: A command used to show the last part of a file.
+	-n 2: Specifies to display the last 2 lines of the file.
+	pqr.csv: The input file. 
+	
+	10)Copying and Adding Content to Another File
+	---------------------------------------------
+	
+	Extract the second column from pqr.csv and save in pqrNew.csv
+	
+	example:cut -d ',' -f 2 pqr.csv >> pqrNew.csv 
+	output:
+	{ Desktop }  » cut -d ',' -f 2 pqr.csv >> pqrNew.csv                                                                           
+	{ Desktop }  » more pqrNew.csv                                                                                                      
 
-    0 = Black       8 = Gray
-    1 = Blue        9 = Light Blue
-    2 = Green       A = Light Green
-    3 = Aqua        B = Light Aqua
-    4 = Red         C = Light Red
-    5 = Purple      D = Light Purple
-    6 = Yellow      E = Light Yellow
-    7 = White       F = Bright White
+	36
+	22
+	47
+	54
+	89
+	100
+	25
+	63
+	78
+  
+	Explanation of the syntax:
+	cut: A command used to extract sections (columns) from each line of a file.	
+	-d ',': Specifies the delimiter (comma , in this case) to separate fields in the CSV file.
+	-f 2: Extracts the second field (column) from each line.
+	pqr.csv: The input file from which the data is extracted.
+	>>: The append operator. It appends the output to the file specified after it.
+	pqrNew.csv: The output file where the extracted column will be added. If the file doesn't exist, it will be created.
 
-Replace 'x' with 'f' for a white background and 'y' with 'd' for a light purple font. 
+	Extraxt the first three lines from pqr.csv and append them to row.csv file 
+	
+	example:head -n 3 pqr.csv >> rows.csv
+	output:
+	{ Desktop }  » head -n 3 pqr.csv >> rows.csv                                                                                      
+	{ Desktop }  » more rows.csv                                                                                                        
+	25,36,96,
+	14,22,32,
+	45,47,87,
 
-color fd
+	Explanation of the syntax:
+	head -n 3 pqr.csv
+	head: A command that shows the first few lines of a file.
+	-n 3: Means "show the first 3 lines."
+	pqr.csv: The file from which we take those 3 lines.
+	>> rows.csv:
+	>>: Adds the output to a file (without deleting existing content).
+	rows.csv: The file where the 3 lines will be added. If it doesn’t exist, a new one is created.
 
-4.Conclusion:
-The color fd command changes the Command Prompt background to white and the text to light purple.
-This shows how we can easily change the look of the terminal using color codes.
+	11)Change file permission 
+	-------------------------
+	Octal Format: chmod XYZ filename
+	Each digit represents permissions for User (Owner), Group, and Others in this order:
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+	Octal	Permission	Description
+	0	---	No permission
+	1	--x	Execute only
+	2	-w-	Write only
+	3	-wx	Write and execute
+	4	r--	Read only
+	5	r-x	Read and execute
+	6	rw-	Read and write
+	7	rwx	Full permission
+	
+	
+	1. chmod 755 file.txt -> rwxr-xr-x
+	Owner: Read, Write, Execute (rwx = 7)
+	Group: Read, Execute (r-x = 5)
+	Others: Read, Execute (r-x = 5)
+	Owner has full access, others can only read and execute.
 
-How to Open PuTTY and Connect to a Server
+	2. chmod 547 file.txt -> r-xr--rwx
+	Owner: Read, Execute (r-x = 5)
+	Group: Read-only (r-- = 4)
+	Others: Read, Write, Execute (rwx = 7)
+	Owner can read and execute, group can only read, others have full access.
 
-  1.Open PuTTY – Search for PuTTY on your computer and open it.
+	3. chmod 444 file.txt → r--r--r--
+	Owner: Read-only (r-- = 4)
+	Group: Read-only (r-- = 4)
+	Others: Read-only (r-- = 4)
+	File is read-only for everyone. No write or execute permissions.
 
-  2.Enter Server IP – Type 172.16.140.150 in the Host Name box.
-
-  3.Start Connection – Click Open to connect.
-
-  4.Login – Enter your username and password (password is hidden when typing). (Password used: 789*asd)
-
-  5.Connected! – You are now logged into the server.
-
-
-
-
+	4. chmod 777 file.txt → rwxrwxrwx
+	Owner: Full access (rwx = 7)
+	Group: Full access (rwx = 7)
+	Others: Full access (rwx = 7)
+	File is completely open to everyone
 
 
+	
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+		
+		
+		
+
+     
 

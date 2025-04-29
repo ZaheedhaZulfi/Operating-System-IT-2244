@@ -1,6 +1,6 @@
 Operating Systems IT 2244
 Day 08 Practical
-22/04/2025
+21/04/2025
 
 
 Q1)Fibonacci Series 

@@ -1,7 +1,4 @@
 
-Operating Systems IT 2244
-Day 07 Practical
-/04/2025
 
 1.)write a code for small astrology based your life path number for that get date of birth from user then calculate life path number.(use switch case)
 

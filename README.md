@@ -1,5 +1,4 @@
-
-Operating Systems IT 2244
+```Operating Systems IT 2244
 Day 02 Practical
 
 Windows Commands

@@ -1,0 +1,226 @@
+Day16
+23/05/2025
+
+1.
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+int a,b,c;
+
+int isPrime(int num) {
+    if (num < 2) return 0;
+    for (int i = 2; i * i <= num; i++) {
+        if (num % i == 0) return 0;
+    }
+    return 1;
+}
+
+int main(){
+	printf("\nEnter 3 numbers:");
+	scanf("%d %d %d", &a, &b, &c);
+	
+	printf("\nI am parent My Id is: %d\n", getpid());
+		
+	
+	int f=fork();
+	if(f==0){
+		
+		int f1=fork();
+		
+		if(f1==0){
+			
+			 printf("Child A1, PID: %d, Parent PID: %d\n", getpid(), getppid());
+			
+			int x=0;
+			int y=1;
+			for(int i=1; i<=b; i++){
+				printf("%d ",x);
+				int z=x+y;
+				x=y;
+				y=z;
+				}
+			}
+			else{
+				int f2=fork();
+			if(f2==0){
+				printf("\nChild A2, PID: %d, Parent PID: %d\n", getpid(), getppid());
+				
+				 printf("\nChecking if %d is prime...\n", c);
+                if (isPrime(c)) {
+                    printf("%d is a prime number.\n", c);
+                } else {
+                    printf("%d is not a prime number.\n", c);
+                }
+				
+			}
+			else{
+				wait(NULL);
+				wait(NULL);
+			}
+			
+			}
+		}
+	
+	
+		else{
+		int f3=fork();
+		
+		if(f3==0){
+			printf("\nChild B, PID: %d, Parent PID: %d\n", getpid(), getppid());
+			
+			
+			int fact=1;
+			for(int i=1; i<=a; i++){
+				fact=fact*i;
+			}
+			printf("\nFactorial of %d is: %d\n", a, fact);
+		}
+		else{
+			
+			//wait(NULL);
+			wait(NULL);
+			wait(NULL);
+		}
+		}
+		
+	return 0;
+}
+
+
+Output:
+[2021ict37@fedora ~]$ ./forkQn
+
+Enter 3 numbers:4 5 6
+
+I am parent My Id is: 3678
+
+Child B, PID: 3700, Parent PID: 3678
+
+Factorial of 4 is: 24
+Child A1, PID: 3701, Parent PID: 3699
+0 1 1 2 3 
+Child A2, PID: 3702, Parent PID: 3699
+
+Checking if 6 is prime...
+6 is not a prime number.
+
+
+
+2.
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+int num;
+
+void fibonacci(int num){
+	
+	int x=0;
+	int y=1;
+	
+	for(int i=1; i<=num; i++){
+		
+		printf("%d ",x);
+		int z=x+y;
+		x=y;
+		y=z;
+	}
+}
+
+void factorial(int num){
+	int fact=1;
+	for(int i=1; i<=num;i++){
+		fact=fact*i;
+	}
+	printf("\nFactorial of %d: %d\n", num, fact);
+}
+
+void squareofnum(int num){
+	int square= num*num;
+	printf("\nSquare of %d is: %d\n", num, square);
+}
+
+void powerofnum(int num){
+	
+	int power=1;
+	
+	for(int i=1; i<=num; i++){
+		
+		power=power*2;
+	}
+	
+	printf("\n2 to the power %d is: %d\n",num, power);
+}
+
+int main(){
+	
+	
+	printf("\nEnter a number: \n");
+	scanf("%d",&num);
+	
+	int p=getpid();
+	printf("\n I am the parent my PID is: %d\n",p);
+	
+	int f1=fork();
+	if(f1==0){
+		
+		printf("\nI'm child1 my PID is: %d, my Parent PID is: %d\n",getpid(), getppid());
+		factorial(num);
+		
+		int f2=fork();
+		
+		if(f2==0){
+			printf("\nI'm child5 my PID is: %d, my Parent PID is: %d\n",getpid(), getppid());
+			fibonacci(num);
+		}
+		else{
+			wait(NULL);
+		}
+	}
+	else{
+		int f3=fork();
+		if(f3==0){
+			printf("\nI'm child2 my PID is: %d, my Parent PID is: %d\n",getpid(), getppid());
+			powerofnum(num);
+		}
+		else{
+			int f4=fork();
+			if(f4==0){
+				printf("\nI'm child3 my PID is: %d, my Parent PID is: %d\n",getpid(), getppid());
+				squareofnum(num);
+			}
+			else{
+				wait(NULL);
+				wait(NULL);
+				wait(NULL);
+			}
+		}
+	}
+	
+	return 0;
+}
+
+Output:
+[2021ict37@fedora ~]$ ./forkQn
+Enter a number: 
+4
+
+ I am the parent my PID is: 140886
+
+I'm child1 my PID is: 140902, my Parent PID is: 140886
+
+Factorial of 4: 24
+
+I'm child2 my PID is: 140903, my Parent PID is: 140886
+
+2 to the power 4 is: 16
+
+I'm child3 my PID is: 140904, my Parent PID is: 140886
+
+Square of 4 is: 16
+
+I'm child5 my PID is: 140905, my Parent PID is: 140902
+0 1 1 2 

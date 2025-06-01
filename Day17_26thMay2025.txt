@@ -1,0 +1,248 @@
+Day17
+26th May 2025
+
+
+1.
+#include <stdio.h>
+#include <stdlib.h>  //for exit()
+#include <unistd.h>  //forsleep()
+
+int main(){
+	
+	printf("Program Started\n");
+	
+	printf("Sleeping for 3 seconds\n");
+	sleep(3); //pause for 3 seconds
+	
+	printf("Exiting the program\n");
+	exit(1);  //clean exit
+	
+	return 0;
+}
+
+Output:
+[2021ict37@fedora ~]$ ./sixth1
+Program Started
+Sleeping for 3 seconds
+Exiting the program
+
+========================================================
+
+2.
+#include <stdio.h>
+#include <stdlib.h>  //for exit()
+#include <unistd.h>  //for sleep()
+#include <sys/wait.h>  //for wait()
+
+int main(){
+	
+	pid_t pid;         //pid_t we use to initialize pid
+	printf("parent process started. PID: %d\n", getpid());
+	
+	pid=fork();       //create a new child process
+	
+	if(pid<0){
+		perror("Fork failed\n");
+		exit(1);
+	}
+	
+	if(pid==0){
+		//child process
+		printf("Child process. PID: %d,sleeping for 2 seconds...\n", getpid());
+		sleep(2);
+		printf("Child process exiting.\n");
+		exit(0);   //child exits with status 0
+	}else{
+		//parent process
+		int status;
+		printf("parent waiting for child to finish...\n");
+		wait(&status);  //wait for child to finish
+		if(WIFEXITED(status)){
+			printf("Child exited with status: %d\n", WEXITSTATUS(status));
+		}else{
+			printf("Child did not exit normally\n");
+		}
+		printf("Parent proces ending.\n");
+		
+	}
+	
+	
+	return 0;
+}
+
+output:
+[2021ict37@fedora ~]$ ./sixth2
+parent process started. PID: 11698
+parent waiting for child to finish...
+Child process. PID: 11699,sleeping for 2 seconds...
+Child process exiting.
+Child exited with status: 0
+Parent proces ending.
+
+========================================================
+
+3.
+Exercise:1
+First child: sleep for 1 second
+Second child: sleep for 3 second
+Parent: Both children have finished
+
+
+#include <stdio.h>
+#include <stdlib.h>  //for exit()
+#include <unistd.h>  //for sleep()
+#include <sys/wait.h>  //for wait()
+
+int main(){
+	
+	pid_t pid;
+	printf("parent process started. PID: %d\n", getpid());
+	
+	pid=fork();
+	
+	if(pid<0){
+		perror("Fork failed\n");
+		exit(1);
+	}
+	
+	if(pid==0){
+		printf("Child 1 process. PID: %d,Parent PID: %d,sleeping for 1 seconds...\n", getpid(),getppid());
+		sleep(1);
+		printf("Child 1 process exiting.\n");
+		exit(0); 
+	}
+	else{
+		pid_t pid2;
+		
+		pid2 =fork();
+		if(pid<0){
+		perror("Fork failed\n");
+		exit(1);
+		}
+		
+		if(pid2==0){
+		printf("Child 2 process. PID: %d,Parent PID: %d,sleeping for 3 seconds...\n", getpid(),getppid());
+		sleep(3);
+		printf("Child 2 process exiting.\n");
+		exit(0); 
+		}
+		
+		int status;
+		printf("parent waiting for child to finish...\n");
+		wait(&status);  //wait for child to finish
+		if(WIFEXITED(status)){
+			printf("Childs exited with status: %d\n", WEXITSTATUS(status));
+		}else{
+			printf("Childs did not exit normally\n");
+		}
+	    
+		printf("Parent proces ending.\n");
+	}
+	
+	return 0;
+}
+
+output:
+[2021ict37@fedora ~]$ ./sixth3
+parent process started. PID: 13099
+parent waiting for child to finish...
+Child 1 process. PID: 13100,Parent PID: 13099,sleeping for 1 seconds...
+Child 2 process. PID: 13101,Parent PID: 13099,sleeping for 3 seconds...
+Child 1 process exiting.
+Childs exited with status: 0
+Parent proces ending.
+
+
+/*
+#include <stdio.h>
+#include <stdlib.h>  //for exit()
+#include <unistd.h>  //for sleep()
+#include <sys/wait.h>  //for wait()
+
+int main(){
+    
+    pid_t pid1, pid2;
+    printf("Parent process started. PID: %d\n", getpid());
+    
+    pid1 = fork(); // First child
+    
+    if(pid1 < 0){
+        perror("Fork failed\n");
+        exit(1);
+    }
+    
+    if(pid1 == 0){ // First child process
+        printf("Child 1 process. PID: %d, Parent PID: %d, sleeping for 1 second...\n", getpid(), getppid());
+        sleep(1);
+        printf("Child 1 process exiting.\n");
+        exit(0); 
+    }
+    else {
+        pid2 = fork(); // Second child
+        
+        if(pid2 < 0){
+            perror("Fork failed\n");
+            exit(1);
+        }
+        
+        if(pid2 == 0){ // Second child process
+            printf("Child 2 process. PID: %d, Parent PID: %d, sleeping for 3 seconds...\n", getpid(), getppid());
+            sleep(3);
+            printf("Child 2 process exiting.\n");
+            exit(0); 
+        }
+
+        // Parent process waits for both children to finish
+        int status1, status2;
+        printf("Parent waiting for children to finish...\n");
+
+        waitpid(pid1, &status1, 0);  // Wait for first child
+        waitpid(pid2, &status2, 0);  // Wait for second child
+
+        if(WIFEXITED(status1)){
+            printf("Child 1 exited with status: %d\n", WEXITSTATUS(status1));
+        } else {
+            printf("Child 1 did not exit normally\n");
+        }
+
+        if(WIFEXITED(status2)){
+            printf("Child 2 exited with status: %d\n", WEXITSTATUS(status2));
+        } else {
+            printf("Child 2 did not exit normally\n");
+        }
+
+        printf("Parent process ending.\n");
+    }
+    
+    return 0;
+}
+
+output:
+[2021ict37@fedora ~]$ ./sixth5
+Parent process started. PID: 14091
+Parent waiting for children to finish...
+Child 1 process. PID: 14092, Parent PID: 14091, sleeping for 1 second...
+Child 2 process. PID: 14093, Parent PID: 14091, sleeping for 3 seconds...
+Child 1 process exiting.
+Child 2 process exiting.
+Child 1 exited with status: 0
+Child 2 exited with status: 0
+Parent process ending.
+*/
+
+========================================================
+
+3.
+//First child: sleeps for 2 seconds, exit with status 2
+//Second child: sleeps for 1 seconds, exit with status 1
+//Parent: waits twice, and prints which child (by PID or exit code)
+//finish first ans second
+
+
+
+4.
+//the parent creates a child processs
+//the child creates a grandchild processs
+//the grandchild sleeps 2 seconds and exit with status 2
+//the child wait for the grand child, prints it exit status
+//then exit with status 55

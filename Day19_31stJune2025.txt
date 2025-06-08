@@ -1,0 +1,299 @@
+//IPC using message Queue
+/*
+	read inputs from the parent process
+	Enter name: Bob
+	Enter RegNo: 71
+	Enter Age: 22
+	
+	message sent successfully
+	
+	give the output from the child
+	
+	Received name: Bob
+	Received RegNo: 71
+	Received Age: 22
+*/
+
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+struct mesg_buffer {
+    long mesg_type;
+    char mesg_text[MAX];
+} message;
+
+int main() {
+    key_t key;
+    int msgid;
+    pid_t c;
+
+    // Generate unique key for message queue (same for both parent and child)
+    key = ftok("progfile", 71);
+    msgid = msgget(key, 0666 | IPC_CREAT);
+    if (msgid == -1) {
+        perror("msgget failed");
+        exit(1);
+    }
+
+    c = fork();
+    if (c < 0) {
+        perror("fork failed");
+        exit(1);
+    }
+    else if (c > 0) {
+        // Parent process: read inputs and send message
+        char name[30], regno[10], age[10];
+
+        printf("Parent process executing!\n");
+        printf("Enter name: ");
+        fgets(name, sizeof(name), stdin); //fgets reads a new line if enter is pressed or characters less than allocated size are typed in
+        printf("Enter RegNo: ");
+        fgets(regno, sizeof(regno), stdin); //stores the keyboard input(stdin) into an array named regno with maximum characters of regno size defined up
+        printf("Enter Age: ");
+        fgets(age, sizeof(age), stdin);  //stdin --> standard input 
+
+        // Prepare message by combining inputs into one string
+        snprintf(message.mesg_text, MAX, "%s|%s|%s", name, regno, age);
+        message.mesg_type = 1;
+		/*snprintf is like printf, but instead of printing on the screen, it writes the formatted text into a string buffer safely.
+		message.mesg_text is the buffer where the string will be stored.
+		MAX is the maximum number of characters to write (to avoid overflow).
+		"%s|%s|%s" is the format string:
+		%s means "insert a string here".
+		The vertical bar | is just a separator character you use to separate each piece of data in the combined string.
+		name, regno, and age are the strings that get inserted into the format, in that order.*/
+
+        // Send the message
+        if (msgsnd(msgid, &message, sizeof(message.mesg_text), 0) == -1) {
+            perror("msgsnd failed");
+            exit(1);
+        }
+
+        printf("Message sent successfully\n");
+
+        // Wait for child to finish
+        wait(NULL);
+
+        // Remove the message queue
+        msgctl(msgid, IPC_RMID, NULL);
+
+        exit(0);
+    }
+    else {
+        // Child process: receive message and display
+        if (msgrcv(msgid, &message, sizeof(message.mesg_text), 1, 0) == -1) {
+            perror("msgrcv failed");
+            exit(1);
+        }
+
+        // Parse the received message using strtok
+		//strtok is used to
+		//chop up one long string into smaller pieces by cutting at | symbols!
+        char *name = strtok(message.mesg_text, "|"); //strtok looks at message.mesg_text and finds the first token before the first |.
+        char *regno = strtok(NULL, "|"); //Calling strtok with NULL continues from where the last token ended.
+        char *age = strtok(NULL, "|");
+
+        printf("Child process executing!\n");
+        printf("Received name: %s", name);
+        printf("Received RegNo: %s", regno);
+        printf("Received Age: %s", age);
+
+        exit(0);
+    }
+
+    return 0;
+}
+
+
+/*[2021ict37@fedora ~]$ gcc ParentChildSendGet.c -o ParentChildSendGet
+[2021ict37@fedora ~]$ ./ParentChildSendGet
+Parent process executing!
+Enter name: Zaheeda
+Enter RegNo: 37
+Enter Age: 23
+Message sent successfully
+Child process executing!
+Received name: Zaheeda
+Received RegNo: 37
+Received Age: 23
+*/
+
+
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+struct Student {
+    char name[30];
+    char regno[10];
+    char age[5];
+};
+
+struct mesg_buffer {
+    long mesg_type;
+    struct Student student;
+};
+
+int main() {
+    key_t key;
+    int msgid;
+    pid_t c;
+
+    key = ftok("progfile", 71);
+    msgid = msgget(key, 0666 | IPC_CREAT);
+    if (msgid == -1) {
+        perror("msgget failed");
+        exit(1);
+    }
+
+    c = fork();
+    if (c < 0) {
+        perror("fork failed");
+        exit(1);
+    }
+    else if (c > 0) {
+        // Parent process: read inputs and send message
+        struct mesg_buffer message;
+        message.mesg_type = 1;
+
+        printf("Parent process executing!\n");
+
+        printf("Enter name: ");
+        fgets(message.student.name, sizeof(message.student.name), stdin);
+        message.student.name[strcspn(message.student.name, "\n")] = 0;
+
+        printf("Enter RegNo: ");
+        fgets(message.student.regno, sizeof(message.student.regno), stdin);
+        message.student.regno[strcspn(message.student.regno, "\n")] = 0;
+
+        printf("Enter Age: ");
+        fgets(message.student.age, sizeof(message.student.age), stdin);
+        message.student.age[strcspn(message.student.age, "\n")] = 0;
+
+        if (msgsnd(msgid, &message, sizeof(struct Student), 0) == -1) {
+            perror("msgsnd failed");
+            exit(1);
+        }
+
+        printf("Message sent successfully\n");
+
+        wait(NULL); // wait for child
+
+        msgctl(msgid, IPC_RMID, NULL); // remove queue
+
+        exit(0);
+    }
+    else {
+        // Child process: receive message and display
+        struct mesg_buffer message;
+
+        if (msgrcv(msgid, &message, sizeof(struct Student), 1, 0) == -1) {
+            perror("msgrcv failed");
+            exit(1);
+        }
+
+        printf("Child process executing!\n");
+        printf("Received name: %s\n", message.student.name);
+        printf("Received RegNo: %s\n", message.student.regno);
+        printf("Received Age: %s\n", message.student.age);
+
+        exit(0);
+    }
+
+    return 0;
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+//madam's
+
+#include <sys/msg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#define MSGKEY 1111
+#define MAX_NAME_LEN 100
+#define MAX_REGNO_LEN 100
+
+struct person {
+    long mtype; // Message type
+    int age;
+    char name[MAX_NAME_LEN];
+    char regno[MAX_REGNO_LEN];
+};
+
+int main() {
+    int msqid;
+    struct person p1, p2;
+    int f = fork();
+
+    if (f == 0) {
+        // Child process: Receiver
+        msqid = msgget(MSGKEY, IPC_CREAT | 0666); 
+        if (msqid == -1) {
+            perror("msgget failed");
+            exit(EXIT_FAILURE);
+        }
+
+        int msg_size = sizeof(struct person) - sizeof(long);
+
+        if (msgrcv(msqid, &p2, msg_size, 0, 0) == -1) {
+            perror("msgrcv failed");
+            exit(EXIT_FAILURE);
+        } else {
+            printf("Received Name: %s\n", p2.name);
+            printf("Received RegNo: %s\n", p2.regno);
+            printf("Received Age: %d\n", p2.age);
+        }
+
+        if (msgctl(msqid, IPC_RMID, NULL) == -1) {
+            perror("msgctl failed");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        // Parent process: Sender
+        msqid = msgget(MSGKEY, IPC_CREAT | 0666);
+        if (msqid == -1) {
+            perror("msgget failed");
+            exit(EXIT_FAILURE);
+        }
+
+        p1.mtype = 1;
+
+        printf("Enter Name: ");
+        scanf("%s", p1.name);
+
+        printf("Enter RegNo: ");
+        scanf("%s", p1.regno);
+
+        printf("Enter Age: ");
+        scanf("%d", &p1.age);
+
+        int msg_size = sizeof(struct person) - sizeof(long);
+
+        if (msgsnd(msqid, &p1, msg_size, IPC_NOWAIT) == -1) {
+            perror("msgsnd failed");
+        } else {
+            printf("Message sent successfully.\n");
+        }
+
+        exit(0);
+    }
+
+    return 0;
+}

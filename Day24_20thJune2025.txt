@@ -1,0 +1,245 @@
+//1.write a program that creates two threads Each thread should print a message indicating it is running.
+//The main thread should wait for both threads to finish before exiting
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+
+
+void *print_message(void *vargp){
+	char* message = (char*)vargp;
+	printf("%s\n", message);
+	return NULL;
+	
+}
+
+int main(){
+	pthread_t thread1, thread2;
+	
+	//create first thread
+	pthread_create(&thread1, NULL, print_message, "hello from thread 1");
+	//create second thread
+	pthread_create(&thread2, NULL, print_message, "hello from thread 2");
+	
+	//wait for both threads to finish
+	pthread_join(thread1, NULL);
+	pthread_join(thread2, NULL);
+	
+	printf("Both threads completed\n");
+	return 0;
+}
+
+Output:
+
+[2021ict37@fedora ~]$ ./threadQ1
+hello from thread 1
+hello from thread 2
+Both threads completed
+
+
+//Q2)
+//Write a program to create 5 threads .each thread should print its thread ID and the exit.
+//The main thread should join all thread and print a completion message
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+
+// Thread function to print thread ID and exit
+void* print_message(void* vargp) {
+    pthread_t tid = pthread_self();  // Get the calling thread's ID
+    printf("Hello from thread ID: %lu\n", tid);
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t threads[5];
+
+    // Create 5 threads
+    for (int i = 0; i < 5; i++) {
+        if (pthread_create(&threads[i], NULL, print_message, NULL) != 0) {
+            perror("pthread_create");
+            exit(1);
+        }
+    }
+
+    // Join all threads
+    for (int i = 0; i < 5; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("All threads completed successfully.\n");
+    return 0;
+}
+
+Output:
+
+[2021ict37@fedora ~]$ ./threadQ2
+Hello from thread ID: 140127855752768
+Hello from thread ID: 140127822181952
+Hello from thread ID: 140127847360064
+Hello from thread ID: 140127838967360
+Hello from thread ID: 140127830574656
+All threads completed successfully.
+
+
+//Q3)
+//Write a program to create threads  which prints number from 1 to 10 write a 1-second delay betwwen each number
+//The main thread should wait for this thread to finished
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>   // For sleep()
+#include <pthread.h>
+
+// Thread function to print numbers 1 to 10 with 1-second delay
+void* print_numbers(void* arg) {
+    for (int i = 1; i <= 10; i++) {
+        printf("%d\n", i);
+        sleep(1);  // Delay of 1 second
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t thread;
+
+    // Create the thread
+    if (pthread_create(&thread, NULL, print_numbers, NULL) != 0) {
+        perror("Failed to create thread");
+        exit(1);
+    }
+
+    // Wait for the thread to finish
+    pthread_join(thread, NULL);
+
+    printf("Thread finished printing numbers.\n");
+    return 0;
+}
+
+Output:
+
+[2021ict37@fedora ~]$ ./threadQ3
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+Thread finished printing numbers.
+
+
+//Q4)
+//Create 2 threads where one thread increments a global counter 100
+//times and the other thread decrements the same counter 100 times
+//print the final value of the counter after both thread finish
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+int counter = 0;
+pthread_mutex_t lock;
+
+void* increment(void* arg) {
+    for (int i = 0; i < 100; i++) {
+        pthread_mutex_lock(&lock);
+        counter++;
+        pthread_mutex_unlock(&lock);
+    }
+    return NULL;
+}
+
+void* decrement(void* arg) {
+    for (int i = 0; i < 100; i++) {
+        pthread_mutex_lock(&lock);
+        counter--;
+        pthread_mutex_unlock(&lock);
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t inc_thread, dec_thread;
+
+    // Initialize mutex
+    if (pthread_mutex_init(&lock, NULL) != 0) {
+        perror("Mutex init failed");
+        exit(1);
+    }
+
+    // Create threads
+    if (pthread_create(&inc_thread, NULL, increment, NULL) != 0) {
+        perror("Failed to create increment thread");
+        exit(1);
+    }
+    if (pthread_create(&dec_thread, NULL, decrement, NULL) != 0) {
+        perror("Failed to create decrement thread");
+        exit(1);
+    }
+
+    // Wait for threads to finish
+    pthread_join(inc_thread, NULL);
+    pthread_join(dec_thread, NULL);
+
+    // Destroy mutex
+    pthread_mutex_destroy(&lock);
+
+    printf("Final value of counter: %d\n", counter);
+    return 0;
+}
+
+Output:
+
+[2021ict37@fedora ~]$ ./threadQ4
+Final value of counter: 0
+
+//Q5)
+//Implement a thread function that takes an integer argument,
+//squares it, and return the result to the main thread using pthread_exit and pthread_join
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+void* square(void* arg) {
+    int num = *(int*)arg;
+    int* result = malloc(sizeof(int));  // Allocate memory to return the result
+    if (result == NULL) {
+        perror("malloc failed");
+        pthread_exit(NULL);
+    }
+    *result = num * num;
+    pthread_exit(result);
+}
+
+int main() {
+    pthread_t thread;
+    int input = 7;  // Example number to square
+    int* squared_result;
+
+    // Create the thread, pass address of input
+    if (pthread_create(&thread, NULL, square, &input) != 0) {
+        perror("Failed to create thread");
+        exit(1);
+    }
+
+    // Wait for thread to finish and get the result
+    if (pthread_join(thread, (void**)&squared_result) != 0) {
+        perror("Failed to join thread");
+        exit(1);
+    }
+
+    printf("The square of %d is %d\n", input, *squared_result);
+
+    free(squared_result);  // Free allocated memory
+    return 0;
+}
+
+Output:
+
+[2021ict37@fedora ~]$ ./threadQ5
+The square of 7 is 49
